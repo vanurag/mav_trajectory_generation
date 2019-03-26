@@ -144,6 +144,10 @@ double computeTimeVelocityRamp(const Eigen::VectorXd& start,
                                const Eigen::VectorXd& goal, double v_max,
                                double a_max);
 
+double computeTimeNfabian(const Eigen::VectorXd& start,
+                          const Eigen::VectorXd& goal, double v_max,
+                          double a_max, double magic_fabian_constant = 6.5);
+
 inline int getHighestDerivativeFromN(int N) { return N / 2 - 1; }
 
 // Creates random vertices for position within minimum_position and

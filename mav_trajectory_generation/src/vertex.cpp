@@ -259,10 +259,7 @@ std::vector<double> estimateSegmentTimesNfabian(const Vertex::Vector& vertices,
     Eigen::VectorXd start, end;
     vertices[i].getConstraint(derivative_order::POSITION, &start);
     vertices[i + 1].getConstraint(derivative_order::POSITION, &end);
-    double distance = (end - start).norm();
-    double t = distance / v_max * 2 * (1.0 +
-                                       magic_fabian_constant * v_max / a_max *
-                                           exp(-distance / v_max * 2));
+    double t = computeTimeNfabian(start, end, v_max, a_max, magic_fabian_constant);
     segment_times.push_back(t);
   }
   return segment_times;
@@ -284,6 +281,15 @@ double computeTimeVelocityRamp(const Eigen::VectorXd& start,
     // Case 2: Distance long enough to accelerate to maximum velocity.
     return 2.0 * acc_time + (distance - 2.0 * acc_distance) / v_max;
   }
+}
+
+double computeTimeNfabian(const Eigen::VectorXd& start,
+                          const Eigen::VectorXd& goal, double v_max,
+                          double a_max, double magic_fabian_constant) {
+  const double distance = (start - goal).norm();
+  return distance / v_max * 2 * (1.0 +
+                                 magic_fabian_constant * v_max / a_max *
+                                     exp(-distance / v_max * 2));
 }
 
 }  // namespace mav_trajectory_generation
